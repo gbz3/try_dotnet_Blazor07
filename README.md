@@ -10,3 +10,26 @@
 # 解決策
 $ rm -f .git/hooks/pre-push
 ```
+
+## Blazor アプリ作成
+
+### ソリューションを作成
+
+```
+$ dotnet new sln -n BlazorApp07
+```
+
+### プロジェクトを作成
+
+```
+$ dotnet new blazor -n BlazorApp07 \
+  --framework net8.0 \
+  --auth None \
+  --interactivity Server
+The template "Blazor Web App" was created successfully.
+
+# ソリューションに追加
+$ dotnet sln BlazorApp07.sln add BlazorApp07/BlazorApp07.csproj
+Project `BlazorApp07/BlazorApp07.csproj` added to the solution.
+$
+```
