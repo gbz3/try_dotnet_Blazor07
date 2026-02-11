@@ -33,3 +33,11 @@ $ dotnet sln BlazorApp07.sln add BlazorApp07/BlazorApp07.csproj
 Project `BlazorApp07/BlazorApp07.csproj` added to the solution.
 $
 ```
+
+### NuGet パッケージを追加
+
+```bash
+dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore --version 8.*
+dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore.SqlServer --version 8.*
+dotnet add BlazorApp07 package Microsoft.AspNetCore.Components.QuickGrid
+```
