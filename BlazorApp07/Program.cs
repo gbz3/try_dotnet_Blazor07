@@ -1,10 +1,23 @@
 using BlazorApp07.Components;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+
+builder.Services.AddDbContextFactory<BlazorApp07.Data.PubsDbContext>(options =>
+{
+    options.UseSqlServer(
+        builder.Configuration.GetConnectionString("DefaultConnection"),
+        providerOptions =>
+        {
+            providerOptions.EnableRetryOnFailure();
+        }
+    );
+});
 
 var app = builder.Build();
 

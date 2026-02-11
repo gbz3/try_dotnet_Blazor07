@@ -47,3 +47,17 @@ dotnet add BlazorApp07 package Microsoft.AspNetCore.Components.QuickGrid
 ```bash
 $ docker exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd' -C -Q "SELECT name FROM sys.databases"
 ```
+
+### User Secrets
+
+```
+# 初期化
+$ dotnet user-secrets init --project BlazorApp07
+
+# 値を追加
+$ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=pubs;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True" --project BlazorApp07
+
+# 内容を確認
+$ cat ~/.microsoft/usersecrets/<UserSecretsId>/secrets.json 
+
+```
