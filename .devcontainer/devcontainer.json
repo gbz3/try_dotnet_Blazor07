@@ -4,15 +4,28 @@
   "features": {
     "ghcr.io/devcontainers/features/dotnet:2": {
       "version": "8.0"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "moby": true
     }
   },
   "customizations": {
     "vscode": {
       "extensions": [
         "ms-dotnettools.csdevkit",
-        "ms-dotnettools.csharp"
+        "ms-dotnettools.csharp",
+        "ms-mssql.mssql"
       ]
     }
   },
-  "postCreateCommand": "rm -f .git/hooks/pre-push"
+  "postCreateCommand": "rm -f .git/hooks/pre-push",
+  "postStartCommand": "bash .devcontainer/setup-sqlserver.sh",
+  "forwardPorts": [1433],
+  "portsAttributes": {
+    "1433": {
+      "label": "SQL Server",
+      "onAutoForward": "notify"
+    }
+  }
 }

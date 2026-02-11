@@ -41,3 +41,9 @@ dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore --version 8.*
 dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore.SqlServer --version 8.*
 dotnet add BlazorApp07 package Microsoft.AspNetCore.Components.QuickGrid
 ```
+
+### pubs データベースの有無を確認
+
+```bash
+$ docker exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'YourStrong@Passw0rd' -C -Q "SELECT name FROM sys.databases"
+```
