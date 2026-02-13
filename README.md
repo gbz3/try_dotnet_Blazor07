@@ -50,14 +50,15 @@ $ docker exec sqlserver /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'You
 
 ### User Secrets
 
+#### 設定手順
+
+1. リポジトリの `Settings` > `Secrets and variables` > `Codespaces`
+1. `New secret` で登録。（環境変数名の例: CONNECTIONSTRINGS__DEFAULTCONNECTION）
+1. Codespace を `Rebuild Container` か再起動して反映。
+
 ```
-# 初期化
-$ dotnet user-secrets init --project BlazorApp07
-
-# 値を追加
-$ dotnet user-secrets set "ConnectionStrings:DefaultConnection" "Server=localhost,1433;Database=pubs;User Id=sa;Password=YourStrong@Passw0rd;TrustServerCertificate=True" --project BlazorApp07
-
-# 内容を確認
-$ cat ~/.microsoft/usersecrets/<UserSecretsId>/secrets.json 
-
+# 設定値を確認
+$ printenv |grep CONNECTIONSTRINGS__DEFAULTCONNECTION
+CONNECTIONSTRINGS__DEFAULTCONNECTION=Server=***
+$ 
 ```

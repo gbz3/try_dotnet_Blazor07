@@ -3,6 +3,22 @@ set -e
 
 echo "Starting SQL Server container..."
 
+echo "Waiting for Docker daemon to be ready..."
+for i in {1..60}; do
+  if docker info > /dev/null 2>&1; then
+    echo "Docker daemon is ready."
+    break
+  fi
+
+  if [ $i -eq 60 ]; then
+    echo "Timeout waiting for Docker daemon"
+    exit 1
+  fi
+
+  echo "Waiting for Docker daemon... ($i/60)"
+  sleep 1
+done
+
 # 既存のコンテナを確認
 if docker ps -a --format '{{.Names}}' | grep -q '^sqlserver$'; then
   echo "SQL Server container already exists. Starting it..."
