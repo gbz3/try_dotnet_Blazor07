@@ -39,7 +39,7 @@ $
 ```bash
 dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore --version 8.*
 dotnet add BlazorApp07 package Microsoft.EntityFrameworkCore.SqlServer --version 8.*
-dotnet add BlazorApp07 package Microsoft.AspNetCore.Components.QuickGrid
+dotnet add BlazorApp07 package Microsoft.AspNetCore.Components.QuickGrid --version 8.*
 ```
 
 ### pubs データベースの有無を確認
