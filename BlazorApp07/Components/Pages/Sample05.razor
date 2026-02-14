@@ -1,0 +1,68 @@
+@page "/Sample05"
+@using BlazorApp07.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> DbFactory
+
+<h3>Sample05 : フィルタリング</h3>
+
+@if (authors is null) {
+    <div>データロード中 ...</div>
+}
+else
+{
+    <div>
+        <EditForm Model="@vm">
+            <InputSelect @bind-Value="vm.SelectedState">
+                <option value="">-- 全て --</option>
+                @foreach (var s in states) {
+                    <option value="@s">@s</option>
+                }
+            </InputSelect>
+        </EditForm>
+
+        <Paginator State="@paginationState" />
+        <QuickGrid Items="@FilteredAuthors" Pagination="@paginationState">
+            <PropertyColumn Property="@(a => a.AuthorId)" Title="著者ID" Sortable="true" />
+            <TemplateColumn Title="著者名"
+                Sortable="true"
+                SortBy="@(GridSort<Author>.ByAscending(a => a.AuthorFirstName).ThenAscending(a => a.AuthorLastName))"
+            >
+                @(context.AuthorFirstName) @(context.AuthorLastName)
+            </TemplateColumn>
+            <PropertyColumn Property="@(a => a.Phone)" Title="電話番号" />
+            <PropertyColumn Property="@(a => a.State)" Title="州" />
+            <TemplateColumn Title="契約有無">
+                <input type="checkbox" disabled="true" checked="@(context.Contract)" />
+                @(context.Contract ? "契約あり" : "契約なし")
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+}
+
+@code {
+    private List<string?> states = new();
+    private IQueryable<Author>? authors = null;
+    private readonly PaginationState paginationState = new() { ItemsPerPage = 10 };
+
+    public class ViewModel { public string SelectedState { get; set; } = string.Empty; }
+    private ViewModel vm = new();
+
+    private IQueryable<Author>? FilteredAuthors {
+        get
+        {
+            if (string.IsNullOrEmpty(vm.SelectedState) == true) return authors;
+            return authors?.Where(a => a.State == vm.SelectedState);
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using (var pubs = await DbFactory.CreateDbContextAsync()) {
+            authors = (await pubs.Authors.ToListAsync()).AsQueryable();
+            states = await pubs.Authors.Select(a => a.State).Distinct().ToListAsync();
+        }
+    }
+}
