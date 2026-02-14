@@ -1,0 +1,23 @@
+@page "/Sample09"
+@using BlazorApp07.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> DbFactory
+
+<h3>Sample09 : コンポーネント化</h3>
+
+<AuthorsGrid Authors="@authors" />
+
+@code {
+    private IQueryable<Author>? authors = null;
+    private readonly PaginationState paginationState = new() { ItemsPerPage = 10 };
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using (var pubs = await DbFactory.CreateDbContextAsync()) {
+            authors = (await pubs.Authors.ToListAsync()).AsQueryable();
+        }
+    }
+}
