@@ -1,0 +1,54 @@
+@page "/Sample08"
+@using BlazorApp07.Data
+@using Microsoft.EntityFrameworkCore
+@using Microsoft.AspNetCore.Components.QuickGrid
+
+@* アプリケーションサービス *@
+@inject IDbContextFactory<PubsDbContext> DbFactory
+@inject NavigationManager Navigation
+
+<h3>Sample08 : ページ遷移</h3>
+
+@if (authors is null) {
+    <div>データロード中 ...</div>
+}
+else
+{
+    <div>
+        <Paginator State="@paginationState" />
+        <QuickGrid Items="@authors" Pagination="@paginationState">
+            <TemplateColumn Title="著者ID">
+                <a href="#" @onclick="() => OnSelectButtonClicked(context)" @onclick:preventDefault="true">@context.AuthorId</a>
+            </TemplateColumn>"
+            <TemplateColumn Title="著者名"
+                Sortable="true"
+                SortBy="@(GridSort<Author>.ByAscending(a => a.AuthorFirstName).ThenAscending(a => a.AuthorLastName))"
+            >
+                @(context.AuthorFirstName) @(context.AuthorLastName)
+            </TemplateColumn>
+            <PropertyColumn Property="@(a => a.Phone)" Title="電話番号" />
+            <PropertyColumn Property="@(a => a.State)" Title="州" />
+            <TemplateColumn Title="契約有無">
+                <input type="checkbox" disabled="true" checked="@(context.Contract)" />
+                @(context.Contract ? "契約あり" : "契約なし")
+            </TemplateColumn>
+        </QuickGrid>
+    </div>
+}
+
+@code {
+    private IQueryable<Author>? authors = null;
+    private readonly PaginationState paginationState = new() { ItemsPerPage = 10 };
+
+    private void OnSelectButtonClicked(Author author)
+    {
+        Navigation.NavigateTo($"/Sample08b/{author.AuthorId}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await using (var pubs = await DbFactory.CreateDbContextAsync()) {
+            authors = (await pubs.Authors.ToListAsync()).AsQueryable();
+        }
+    }
+}
